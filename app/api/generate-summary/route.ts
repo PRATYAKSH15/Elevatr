@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     const data = await req.json();
     const summary = await generateSummaryPrompt(data);
     return NextResponse.json({ summary });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Error generating summary" }, { status: 500 });
   }
 }

@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     const { skills } = await req.json();
     const suggestion = await suggestSkillsPrompt(skills);
     return NextResponse.json({ suggestion });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Error suggesting skills" }, { status: 500 });
   }
 }
