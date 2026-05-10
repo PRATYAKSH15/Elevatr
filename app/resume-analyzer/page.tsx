@@ -8,7 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 interface ResumeFeedback {
-  score: number | string;
+  score?: number | string;
   summary?: string;
   suggestions?: string[];
 }
