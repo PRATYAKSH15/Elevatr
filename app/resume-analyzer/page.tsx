@@ -92,7 +92,7 @@ export default function ResumeAnalyzerPage() {
 
 /* ---------------- Result Card Component ---------------- */
 function ResultCard({ feedback }: { feedback: ResumeFeedback }) {
-  const score = parseInt(feedback.score) || 0;
+  const score = parseInt(String(feedback.score ?? 0)) || 0;
 
   // Framer Motion spring for smooth animation
   const scoreValue = useSpring(0, { stiffness: 80, damping: 15 });
