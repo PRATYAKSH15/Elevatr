@@ -1,6 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+import { geminiClient } from "./geminiClient";
 
 export async function generateSummaryPrompt(data: {
   name: string;
@@ -12,7 +10,7 @@ export async function generateSummaryPrompt(data: {
   Skills: ${data.skills.join(", ")}
   Tone: concise, resume-ready, formal.`;
 
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+  const model = geminiClient.getGenerativeModel({ model: "gemini-2.5-flash" });
   const result = await model.generateContent(prompt);
   return result.response.text();
 }
@@ -21,7 +19,7 @@ export async function suggestSkillsPrompt(skills: string[]) {
   const prompt = `User knows ${skills.join(", ")}.
   Suggest 3–5 related or in-demand skills for improving resume.`;
 
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+  const model = geminiClient.getGenerativeModel({ model: "gemini-2.5-flash" });
   const result = await model.generateContent(prompt);
   return result.response.text();
 }

@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+import { auth } from "@clerk/nextjs/server";
+import { geminiClient } from "@/lib/geminiClient";
 
 export async function POST(req: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { resumeText } = await req.json();
 
@@ -20,21 +24,18 @@ export async function POST(req: Request) {
     """${resumeText}"""
     `;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = geminiClient.getGenerativeModel({ model: "gemini-2.5-flash" });
     const result = await model.generateContent(prompt);
     let text = result.response.text().trim();
 
-    // 🧹 Clean up Gemini’s markdown formatting (```json ... ```)
     if (text.startsWith("```")) {
       text = text.replace(/```json|```/g, "").trim();
     }
 
-    // 🧠 Try parsing JSON safely
     let feedback;
     try {
       feedback = JSON.parse(text);
-    } catch (err) {
-      console.warn("Failed to parse JSON:", text);
+    } catch {
       feedback = { score: 0, summary: "Error parsing AI response.", suggestions: [text] };
     }
 

@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/db";
 
 export async function POST(req: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
     const profile = await prisma.profile.create({
       data: {
-        userId: body.userId,
+        userId,
         name: body.name,
         email: body.email,
         education: body.education,
@@ -22,11 +28,11 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const userId = url.searchParams.get("userId");
-
-  if (!userId) return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+export async function GET() {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const profile = await prisma.profile.findFirst({
     where: { userId },

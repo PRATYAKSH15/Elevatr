@@ -8,6 +8,8 @@ if (!API_KEY) {
 
 const client = new GoogleGenerativeAI(API_KEY);
 
+export const geminiClient = client;
+
 function buildPrompt(resumeText: string, jobRole?: string) {
   const roleLine = jobRole ? `For role: ${jobRole}\n` : "";
   return `

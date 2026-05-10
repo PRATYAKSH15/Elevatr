@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { auth } from "@clerk/nextjs/server";
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+import { geminiClient } from "@/lib/geminiClient";
 
 export async function POST(req: Request) {
   try {
@@ -13,7 +11,7 @@ export async function POST(req: Request) {
         { status: 401 }
       );
     }
-    
+
     const { name, recipient, context } = await req.json();
 
     const prompt = `
@@ -21,12 +19,12 @@ export async function POST(req: Request) {
     Sender: ${name}
     Recipient/Company: ${recipient}
     Purpose: ${context}
-    
+
     Tone: polite, confident, and concise.
     End with a short call to action.
     `;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = geminiClient.getGenerativeModel({ model: "gemini-2.5-flash" });
     const result = await model.generateContent(prompt);
     const email = result.response.text();
 

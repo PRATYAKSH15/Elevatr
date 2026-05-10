@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function ProfileForm({ userId }: { userId: string }) {
+export default function ProfileForm() {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -29,7 +29,6 @@ export default function ProfileForm({ userId }: { userId: string }) {
 
     const skillsArray = form.skills.split(",").map((s) => s.trim());
 
-    // Step 1: Generate summary
     const summaryRes = await fetch("/api/generate-summary", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -37,7 +36,6 @@ export default function ProfileForm({ userId }: { userId: string }) {
     });
     const summaryData = await summaryRes.json();
 
-    // Step 2: Suggest skills
     const skillsRes = await fetch("/api/suggest-skills", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -56,7 +54,6 @@ export default function ProfileForm({ userId }: { userId: string }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId,
         ...form,
         skills: skillsArray,
         summary,
