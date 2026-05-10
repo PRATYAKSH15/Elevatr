@@ -1,8 +1,8 @@
 // app/interview/page.tsx
 import React from "react";
 import UploadResume from "./UploadResume";
-import { auth } from "@clerk/nextjs/server"; // or your auth import
-import { Button } from "@/components/ui/button";
+import { auth } from "@clerk/nextjs/server";
+import Link from "next/link";
 
 export const metadata = {
   title: "Interview Q&A Generator",
@@ -17,12 +17,12 @@ export default async function InterviewPage() {
     return (
       <div className="text-center mt-20">
         <p className="text-lg mb-4">Please log in to continue.</p>
-        <a
+        <Link
           href="/sign-in"
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
         >
           Go to Login
-        </a>
+        </Link>
       </div>
     );
   }

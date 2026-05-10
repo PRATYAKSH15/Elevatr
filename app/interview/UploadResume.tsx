@@ -12,7 +12,7 @@ export default function UploadResume() {
     e.preventDefault();
     setError(null);
     setResult(null);
-    const fileInput = (e.currentTarget.elements as any).file as HTMLInputElement;
+    const fileInput = e.currentTarget.elements.namedItem("file") as HTMLInputElement;
     const file = fileInput.files?.[0];
     if (!file) {
       setError("Please choose a PDF file.");
@@ -42,8 +42,8 @@ export default function UploadResume() {
 
       const json = await res.json();
       setResult(json.interviewQnA ?? json.qna ?? null);
-    } catch (err: any) {
-      setError(err?.message || "Something went wrong.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
       setLoading(false);
     }

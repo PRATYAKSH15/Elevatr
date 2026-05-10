@@ -1,8 +1,8 @@
 declare module "pdf-parse" {
   interface PDFResult {
     text: string;
-    info?: any;
-    metadata?: any;
+    info?: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
     version?: string;
     numpages?: number;
   }

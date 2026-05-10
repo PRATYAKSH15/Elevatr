@@ -4,15 +4,25 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useUser } from "@clerk/nextjs"; // or your auth hook
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+
+interface Role {
+  title: string;
+  confidence: number;
+  reason: string;
+}
+
+interface JobFeedback {
+  roles: Role[];
+}
 
 export default function JobRoleMatcherPage() {
   const { isSignedIn, isLoaded } = useUser();
   const router = useRouter();
   const [userInfo, setUserInfo] = useState("");
   const [loading, setLoading] = useState(false);
-  const [feedback, setFeedback] = useState<any>(null);
+  const [feedback, setFeedback] = useState<JobFeedback | null>(null);
 
   // Redirect to login if not signed in
   useEffect(() => {
@@ -85,7 +95,7 @@ export default function JobRoleMatcherPage() {
 }
 
 /* ---------------- Results Section ---------------- */
-function Results({ feedback }: { feedback: any }) {
+function Results({ feedback }: { feedback: JobFeedback }) {
   const roles = feedback?.roles || [];
 
   return (
@@ -98,7 +108,7 @@ function Results({ feedback }: { feedback: any }) {
       <h2 className="text-2xl font-semibold text-emerald-600 mb-6 text-center">Recommended Roles</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        {roles.map((r: any, idx: number) => (
+        {roles.map((r: Role, idx: number) => (
           <motion.div
             key={idx}
             whileHover={{ y: -4 }}

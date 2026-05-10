@@ -100,7 +100,7 @@ export default function ContactPage() {
               Contact Us
             </CardTitle>
             <CardDescription className="text-center text-slate-600">
-              We're here to help! Fill out the form below.
+              We&apos;re here to help! Fill out the form below.
             </CardDescription>
           </CardHeader>
 

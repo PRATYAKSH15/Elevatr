@@ -2,11 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { motion, useSpring, useTransform } from "framer-motion";
-import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+
+interface ResumeFeedback {
+  score: number | string;
+  summary?: string;
+  suggestions?: string[];
+}
 
 export default function ResumeAnalyzerPage() {
   const { isSignedIn, isLoaded } = useUser();
@@ -14,7 +19,7 @@ export default function ResumeAnalyzerPage() {
 
   const [resumeText, setResumeText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [feedback, setFeedback] = useState<any>(null);
+  const [feedback, setFeedback] = useState<ResumeFeedback | null>(null);
 
   // Redirect to login if not signed in
   useEffect(() => {
@@ -86,7 +91,7 @@ export default function ResumeAnalyzerPage() {
 }
 
 /* ---------------- Result Card Component ---------------- */
-function ResultCard({ feedback }: { feedback: any }) {
+function ResultCard({ feedback }: { feedback: ResumeFeedback }) {
   const score = parseInt(feedback.score) || 0;
 
   // Framer Motion spring for smooth animation
