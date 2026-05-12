@@ -213,7 +213,7 @@ export default function HomePage() {
                     <Star key={i} size={14} className="text-amber-400 fill-amber-400" />
                   ))}
                 </div>
-                <p className="text-slate-600 text-sm leading-relaxed mb-5">"{text}"</p>
+                <p className="text-slate-600 text-sm leading-relaxed mb-5">&ldquo;{text}&rdquo;</p>
                 <div>
                   <div className="font-semibold text-slate-900 text-sm">{name}</div>
                   <div className="text-slate-500 text-xs mt-0.5">{role}</div>
