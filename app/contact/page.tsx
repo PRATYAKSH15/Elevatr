@@ -5,158 +5,135 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import { Mail, CheckCircle } from "lucide-react";
 
 export default function ContactPage() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    message: "",
-    hp: "",
-  });
-
+  const [form, setForm] = useState({ name: "", email: "", message: "", hp: "" });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async () => {
-    if (!form.name || !form.email || !form.message) return;
-
+    if (!form.name || !form.email || !form.message) {
+      setError("All fields are required.");
+      return;
+    }
     setLoading(true);
-    setSuccess(false);
-
+    setError("");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-
       if (res.ok) {
         setSuccess(true);
         setForm({ name: "", email: "", message: "", hp: "" });
+      } else {
+        setError("Something went wrong. Please try again.");
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
+      setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="relative min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-white via-slate-50 to-slate-100 overflow-hidden">
+    <main className="min-h-screen bg-slate-50 py-12 px-6">
+      <div className="max-w-xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-8 h-8 bg-teal-50 rounded-lg flex items-center justify-center">
+              <Mail size={16} className="text-teal-600" />
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900">Contact Us</h1>
+          </div>
+          <p className="text-slate-500 text-sm ml-11">
+            Have a question or feedback? We&apos;d love to hear from you.
+          </p>
+        </div>
 
-      {/* Gradient Blobs */}
-      <motion.div
-        animate={{ opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 10, repeat: Infinity }}
-        className="absolute top-[-200px] left-[-150px] w-[450px] h-[450px] rounded-full bg-emerald-300/30 blur-[140px] -z-20"
-      />
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm"
+        >
+          {success ? (
+            <div className="text-center py-8">
+              <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle size={24} className="text-emerald-600" />
+              </div>
+              <h2 className="font-semibold text-slate-900 mb-1">Message sent!</h2>
+              <p className="text-slate-500 text-sm">We&apos;ll get back to you as soon as possible.</p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-5 border-slate-200"
+                onClick={() => setSuccess(false)}
+              >
+                Send another message
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* Honeypot */}
+              <input type="text" name="hp" value={form.hp} onChange={handleChange} className="hidden" autoComplete="off" />
 
-      <motion.div
-        animate={{ opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 11, repeat: Infinity }}
-        className="absolute bottom-[-200px] right-[-150px] w-[450px] h-[450px] rounded-full bg-sky-300/30 blur-[140px] -z-20"
-      />
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Name</label>
+                <Input
+                  name="name"
+                  placeholder="Your full name"
+                  value={form.name}
+                  onChange={handleChange}
+                  className="border-slate-200 focus:border-emerald-400"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
+                <Input
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={handleChange}
+                  className="border-slate-200 focus:border-emerald-400"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Message</label>
+                <Textarea
+                  name="message"
+                  placeholder="Tell us what&apos;s on your mind..."
+                  value={form.message}
+                  onChange={handleChange}
+                  className="border-slate-200 focus:border-emerald-400 resize-none min-h-[120px]"
+                />
+              </div>
 
-      {/* Subtle Grid */}
-      <div
-        className="absolute inset-0 -z-10 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            "linear-gradient(#0f766e22 1px, transparent 1px), linear-gradient(90deg, #0f766e22 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      />
+              {error && (
+                <div className="bg-red-50 border border-red-100 text-red-600 text-sm rounded-lg px-4 py-2.5">
+                  {error}
+                </div>
+              )}
 
-      {/* Floating Square */}
-      <motion.div
-        initial={{ opacity: 0, rotate: 0 }}
-        animate={{ opacity: 0.25, rotate: 360 }}
-        transition={{ duration: 55, repeat: Infinity, ease: "linear" }}
-        className="absolute w-[650px] h-[650px] border border-emerald-400/20 rounded-xl -z-10"
-        style={{ filter: "blur(3px)" }}
-      />
-
-      {/* Contact Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="w-full max-w-lg"
-      >
-        <Card className="backdrop-blur-xl bg-white/70 border border-white/40 shadow-xl rounded-2xl">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-sky-600 bg-clip-text text-transparent text-center">
-              Contact Us
-            </CardTitle>
-            <CardDescription className="text-center text-slate-600">
-              We&apos;re here to help! Fill out the form below.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="space-y-4 mt-2">
-
-            {success && (
-              <p className="text-emerald-600 text-center font-medium animate-pulse">
-                Message sent successfully!
-              </p>
-            )}
-
-            {/* Honeypot */}
-            <input
-              type="text"
-              name="hp"
-              value={form.hp}
-              onChange={handleChange}
-              className="hidden"
-              autoComplete="off"
-            />
-
-            <Input
-              name="name"
-              placeholder="Your Name"
-              value={form.name}
-              onChange={handleChange}
-              className="focus:ring-2 focus:ring-emerald-400"
-            />
-
-            <Input
-              name="email"
-              type="email"
-              placeholder="Your Email"
-              value={form.email}
-              onChange={handleChange}
-              className="focus:ring-2 focus:ring-emerald-400"
-            />
-
-            <Textarea
-              name="message"
-              placeholder="Your Message"
-              value={form.message}
-              onChange={handleChange}
-              className="min-h-[130px] focus:ring-2 focus:ring-emerald-400"
-            />
-
-            <Button
-              onClick={handleSubmit}
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold shadow-md rounded-lg"
-            >
-              {loading ? "Sending..." : "Send Message"}
-            </Button>
-          </CardContent>
-        </Card>
-      </motion.div>
+              <Button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+              >
+                {loading ? "Sending..." : "Send Message"}
+              </Button>
+            </div>
+          )}
+        </motion.div>
+      </div>
     </main>
   );
 }

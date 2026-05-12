@@ -4,8 +4,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Evelatr - AI Profile Builder",
-  description: "Build smarter profiles with AI — resume summaries, skills, cold emails, and cover letters.",
+  title: "Elevatr — AI Career Profile Builder",
+  description: "Build a standout career profile with AI. Resume analysis, cold emails, interview prep, and more — powered by Gemini AI.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
