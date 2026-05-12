@@ -61,15 +61,6 @@ export default function HomePage() {
       <section className="relative flex flex-col items-center text-center py-24 px-6 overflow-hidden bg-gradient-to-b from-slate-50 to-white">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(16,185,129,0.08),transparent)] pointer-events-none" />
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-medium px-4 py-1.5 rounded-full mb-8"
-        >
-          <Sparkles size={14} />
-          Powered by Gemini AI
-        </motion.div>
 
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
